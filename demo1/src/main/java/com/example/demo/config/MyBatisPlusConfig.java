@@ -7,12 +7,18 @@ import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInt
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 
 @Configuration
 //@MapperScan("com.example.demo.mapper")
 //TODO 主启动类已经有该注解,无需重复注释. 效果会被覆盖, 也会导致Mybatis的底层Mapper扫描后置处理器重复扫描.浪费启动时间
 public class MyBatisPlusConfig {
     @Bean
+    @Order
+    @DependsOn()
+    @Primary
     public MybatisPlusInterceptor mayBatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
 //        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));

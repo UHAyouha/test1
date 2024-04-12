@@ -18,8 +18,10 @@ import java.util.Map;
 @RequestMapping("/userClass")
 //TODO 没有注释的地方,请直接参看ClassInfoController的相关理由
 public class UserClassController {
-    @Autowired
+    @Autowired(required = false)
     UserClassMapper userClassMapper;
+
+
 
     @Autowired
     private UserClassService service;
@@ -52,13 +54,9 @@ public class UserClassController {
     @PostMapping("update")
     public Result updateUser(@RequestBody UserClass user) {
         //TODO 查询方式错误, 应为 userClassMapper.selectById(user.getId())
-        UserClass userid = userClassMapper.selectById(user);
-        //TODO 多余操作 浪费JVM操作指令(先发起方法栈入线程栈,再推入局部变量i入线程栈,再将i指向内存)
-        int i = userid.getVersion();
-        //TODO 意义不明 为什么要将userid这个引用指向的内存地址值修改为user所指向的内存地址值 ????
-        userid = user;
+        UserClass userid = userClassMapper.selectById(user.getId());
         //TODO 多余操作
-        userid.setVersion(i);
+        user.setVersion(userid.getVersion());
         //TODO 理由与ClassInfoController.add()方法一致
         System.out.println("" + userid.getVersion());
         userClassMapper.updateById(userid);
@@ -102,7 +100,6 @@ public class UserClassController {
 
     @GetMapping("getClassByUser")
     public Result<List<duo>> getClassByUser(int id) {
-
         return Result.success(service.getClassByUser(id));
     }
 }
